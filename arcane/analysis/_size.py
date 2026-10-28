@@ -56,4 +56,6 @@ def by_size(path: Path) -> str:
     for limit, name in SIZE_CATEGORIES:
         if limit is None or size <= limit:
             return name
-    raise AssertionError("unreachable: the last category has no limit")
+    raise AssertionError(
+        "unreachable: the last category has no limit"
+    )  # pragma: no cover
