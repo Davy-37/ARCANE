@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "arcane"
+version = "0.1.0"
+description = "A Python library to analyze, compare, search, and secure files and folders."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Davy Nziengui" },
+    { name = "Emilie Théotime" },
+    { name = "Jean Novello" },
+]
+keywords = ["files", "folders", "analysis", "comparison", "search", "security"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: System :: Filesystems",
+]
+# arcane only relies on the standard library: no runtime dependency.
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/Davy-37/ARCANE"
+Issues = "https://github.com/Davy-37/ARCANE/issues"
+Changelog = "https://github.com/Davy-37/ARCANE/blob/main/CHANGELOG.md"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0,<10.0",
+    "pytest-cov>=5.0,<8.0",
+    "black>=24.0",
+    "ruff>=0.6",
+    "pre-commit>=3.7",
+    "build>=1.2",
+    "twine>=5.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["arcane*"]
+exclude = ["*.tests", "*.tests.*"]
+
+[tool.pytest.ini_options]
+testpaths = ["arcane"]
+addopts = "--doctest-modules --ignore=build"
+
+[tool.coverage.run]
+branch = true
+source = ["arcane"]
+omit = ["*/tests/*"]
+
+[tool.coverage.report]
+show_missing = true
