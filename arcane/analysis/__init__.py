@@ -1,3 +1,5 @@
 """File and folder analysis."""
 
-__all__: list[str] = []
+from arcane.analysis._models import ClassifyResult, CopiedEntry, FailedEntry
+
+__all__ = ["ClassifyResult", "CopiedEntry", "FailedEntry"]
