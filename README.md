@@ -7,8 +7,8 @@
 A Python library to analyze, compare, search, and secure files and folders.
 It only relies on the standard library.
 
-> **Status:** early development. Only the analysis features below are
-> available; the API may still change.
+> **Status:** early development. Analysis and security features are available;
+> the API may still change.
 
 ## Features
 
@@ -19,6 +19,7 @@ The library is organized in submodules.
 | `arcane.analysis` | Classify files into folders by extension, size or date | Available |
 | `arcane.comparison` | Compare folders | Planned |
 | `arcane.search` | Search files and folders | Planned |
+| `arcane.security` | Calculate SHA-256 hashes and verify file integrity | Available |
 
 ### Analysis
 
@@ -36,6 +37,36 @@ never modified, and file metadata is kept.
 - A problem on one file (missing file, permission error) is reported in the
   result and does not stop the others.
 - An unknown criterion raises `ValueError` before anything is touched.
+
+### Security
+
+The `arcane.security` module provides functions to calculate SHA-256 hashes and detect file modifications by comparing a file's current hash with a reference hash.
+
+- `sha256(path_file)`: Returns the SHA-256 hash of a file as a hexadecimal string.
+- `verify_file_integrity(path_file, original_sha256)`: Returns `True` if the file has been modified and `False` if the hashes match.
+
+Files are read in chunks to support large files without loading their entire contents into memory.
+
+**Example:**
+
+```python
+from arcane.security import sha256, verify_file_integrity
+
+file_path = "document.txt"
+
+# Calculate the original hash
+original_hash = sha256(file_path)
+
+# Verify the file's integrity later
+is_modified = verify_file_integrity(file_path, original_hash)
+
+if is_modified:
+    print("The file has been modified.")
+else:
+    print("The file has not been modified.")
+```
+
+Invalid file paths raise appropriate exceptions, such as `FileNotFoundError` or `IsADirectoryError`.
 
 ## Installation
 
