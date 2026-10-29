@@ -7,8 +7,8 @@
 A Python library to analyze, compare, search, and secure files and folders.
 It only relies on the standard library.
 
-> **Status:** early development. Only the analysis features below are
-> available; the API may still change.
+> **Status:** early development. Analysis and security features are available;
+> the API may still change.
 
 ## Features
 
