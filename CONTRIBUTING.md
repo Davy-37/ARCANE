@@ -42,6 +42,8 @@ linting) and `tests` (the test suite on several Python versions).
   public API in the `__init__.py` files.
 - Put the tests in the `tests/` folder of the submodule they verify.
 - Cover normal cases, edge cases and expected exceptions.
+- Record every user-visible change in `CHANGELOG.md`, under `[Unreleased]`
+  (`Added`, `Changed`, `Fixed`, `Removed`).
 
 ## Branch protection
 
