@@ -17,4 +17,3 @@ __all__ = [
     "by_size",
     "resolve_destination",
 ]
-__all__: list[str] = []
