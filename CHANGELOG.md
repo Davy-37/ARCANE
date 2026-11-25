@@ -15,6 +15,9 @@ project adheres to [Semantic Versioning](https://semver.org/).
   modification month, with the `by_extension()`, `by_size()`, `by_date()` and
   `resolve_destination()` helpers and the `ClassifyResult`, `CopiedEntry` and
   `FailedEntry` result types.
+- `duplicates()` to detect files with identical SHA-256 hashes in a folder,
+  display duplicate groups, and optionally remove duplicates while keeping one
+  copy of each file.
 - `sha256()` to compute the SHA-256 hash of a file, and
   `verify_file_integrity()` to check whether a file was modified.
 - Pre-commit with Black, Ruff and file checks.
