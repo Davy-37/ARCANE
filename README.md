@@ -23,6 +23,8 @@ The library is organized in submodules.
 
 ### Analysis
 
+#### File classification
+
 `File_classify` copies files into one folder per category. The originals are
 never modified, and file metadata is kept.
 
@@ -111,25 +113,6 @@ The `arcane.security` module provides functions to calculate SHA-256 hashes and 
 
 Files are read in chunks to support large files without loading their entire contents into memory.
 
-**Example:**
-
-```python
-from arcane.security import sha256, verify_file_integrity
-
-file_path = "document.txt"
-
-# Calculate the original hash
-original_hash = sha256(file_path)
-
-# Verify the file's integrity later
-is_modified = verify_file_integrity(file_path, original_hash)
-
-if is_modified:
-    print("The file has been modified.")
-else:
-    print("The file has not been modified.")
-```
-
 Invalid file paths raise appropriate exceptions, such as `FileNotFoundError` or `IsADirectoryError`.
 
 ## Installation
@@ -152,6 +135,12 @@ pre-commit install
 Python 3.10 or newer is required.
 
 ## Usage
+
+The following examples demonstrate how to use the main features of ARCANE.
+
+### File classification
+
+Organize files into folders according to their extension, size or date.
 
 ```python
 from pathlib import Path
@@ -177,6 +166,61 @@ The result is a `ClassifyResult` with three lists:
 
 The classifiers `by_extension`, `by_size` and `by_date` are also available on
 their own, each taking a `Path` and returning the category name.
+
+### Duplicate file detection
+
+Detect, display and optionally remove duplicate files in a folder.
+
+```python
+from arcane.analysis import duplicates
+
+# Detect duplicate files
+result = duplicates("downloads")
+print(result)
+
+# Detect and display duplicate files
+duplicates("downloads", display=True)
+
+# Detect, display and remove duplicate files
+duplicates("downloads", delete=True, display=True)
+```
+
+For example, if `file1.txt` and `file2.txt` have identical contents,
+the result is:
+
+```python
+[["file1.txt", "file2.txt"]]
+```
+
+When `delete=True`, `file1.txt` is kept and `file2.txt` is removed.
+
+> **Warning:** By default, no files are deleted. Use `delete=True` with
+> caution, as duplicate files are permanently removed.
+
+### File integrity verification
+
+Calculate the SHA-256 hash of a file and verify whether its contents
+have been modified.
+
+```python
+from arcane.security import sha256, verify_file_integrity
+
+file_path = "document.txt"
+
+# Calculate the original hash
+original_hash = sha256(file_path)
+print(original_hash)
+
+# Verify the file's integrity later
+is_modified = verify_file_integrity(file_path, original_hash)
+
+if is_modified:
+    print("The file has been modified.")
+else:
+    print("The file has not been modified.")
+```
+
+The original hash can be stored as a reference for future integrity checks.
 
 ## Contributing
 
