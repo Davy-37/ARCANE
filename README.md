@@ -7,8 +7,8 @@
 A Python library to analyze, compare, search, and secure files and folders.
 It only relies on the standard library.
 
-> **Status:** early development. Only the analysis features below are
-> available; the API may still change.
+> **Status:** early development. Analysis and security features are available;
+> the API may still change.
 
 ## Features
 
@@ -16,11 +16,14 @@ The library is organized in submodules.
 
 | Submodule | Purpose | Status |
 |---|---|---|
-| `arcane.analysis` | Classify files into folders by extension, size or date | Available |
+| `arcane.analysis` | Classify files into folders by extension, size or date, detect and remove duplicate files | Available |
 | `arcane.comparison` | Compare folders | Planned |
 | `arcane.search` | Search files and folders | Planned |
+| `arcane.security` | Calculate SHA-256 hashes and verify file integrity | Available |
 
 ### Analysis
+
+#### File classification
 
 `File_classify` copies files into one folder per category. The originals are
 never modified, and file metadata is kept.
@@ -36,6 +39,34 @@ never modified, and file metadata is kept.
 - A problem on one file (missing file, permission error) is reported in the
   result and does not stop the others.
 - An unknown criterion raises `ValueError` before anything is touched.
+
+#### Duplicate file detection
+
+`duplicates` detects duplicate files by comparing their SHA-256 hashes.
+Only files directly contained in the folder are analyzed.
+
+| Parameter | Description | Default |
+|---|---|---|
+| `path_folder` | Path to the folder to analyze | Required |
+| `delete` | Remove duplicates, keeping the first file in alphabetical order in each group | `False` |
+| `display` | Display duplicate groups and deletion operations | `False` |
+
+- Duplicate groups and filenames are sorted alphabetically.
+- Subdirectories are ignored.
+- Invalid folder paths raise `FileNotFoundError` or `NotADirectoryError`.
+- Files are permanently removed only when `delete=True`.
+- Returns a list of duplicate filename groups, even when duplicates are removed.
+
+### Security
+
+The `arcane.security` module provides functions to calculate SHA-256 hashes and detect file modifications by comparing a file's current hash with a reference hash.
+
+- `sha256(path_file)`: Returns the SHA-256 hash of a file as a hexadecimal string.
+- `verify_file_integrity(path_file, original_sha256)`: Returns `True` if the file has been modified and `False` if the hashes match.
+
+Files are read in chunks to support large files without loading their entire contents into memory.
+
+Invalid file paths raise appropriate exceptions, such as `FileNotFoundError` or `IsADirectoryError`.
 
 ## Installation
 
@@ -57,6 +88,12 @@ pre-commit install
 Python 3.10 or newer is required.
 
 ## Usage
+
+The following examples demonstrate how to use the main features of ARCANE.
+
+### File classification
+
+Organize files into folders according to their extension, size or date.
 
 ```python
 from pathlib import Path
@@ -82,6 +119,61 @@ The result is a `ClassifyResult` with three lists:
 
 The classifiers `by_extension`, `by_size` and `by_date` are also available on
 their own, each taking a `Path` and returning the category name.
+
+### Duplicate file detection
+
+Detect, display and optionally remove duplicate files in a folder.
+
+```python
+from arcane.analysis import duplicates
+
+# Detect duplicate files
+result = duplicates("downloads")
+print(result)
+
+# Detect and display duplicate files
+duplicates("downloads", display=True)
+
+# Detect, display and remove duplicate files
+duplicates("downloads", delete=True, display=True)
+```
+
+For example, if `file1.txt` and `file2.txt` have identical contents,
+the result is:
+
+```python
+[["file1.txt", "file2.txt"]]
+```
+
+When `delete=True`, `file1.txt` is kept and `file2.txt` is removed.
+
+> **Warning:** By default, no files are deleted. Use `delete=True` with
+> caution, as duplicate files are permanently removed.
+
+### File integrity verification
+
+Calculate the SHA-256 hash of a file and verify whether its contents
+have been modified.
+
+```python
+from arcane.security import sha256, verify_file_integrity
+
+file_path = "document.txt"
+
+# Calculate the original hash
+original_hash = sha256(file_path)
+print(original_hash)
+
+# Verify the file's integrity later
+is_modified = verify_file_integrity(file_path, original_hash)
+
+if is_modified:
+    print("The file has been modified.")
+else:
+    print("The file has not been modified.")
+```
+
+The original hash can be stored as a reference for future integrity checks.
 
 ## Contributing
 
