@@ -1,3 +1,7 @@
 """File and folder search."""
 
-__all__: list[str] = []
+from ._extension import by_extension
+
+__all__ = [
+    "by_extension",
+]
