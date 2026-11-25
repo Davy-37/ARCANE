@@ -7,7 +7,7 @@
 A Python library to analyze, compare, search, and secure files and folders.
 It only relies on the standard library.
 
-> **Status:** early development. Analysis and security features are available;
+> **Status:** early development. Analysis, comparison and security features are available;
 > the API may still change.
 
 ## Features
@@ -17,7 +17,7 @@ The library is organized in submodules.
 | Submodule | Purpose | Status |
 |---|---|---|
 | `arcane.analysis` | Classify files into folders by extension, size or date | Available |
-| `arcane.comparison` | Compare folders | Planned |
+| `arcane.comparison` | Detect added, deleted and modified files between folders | Available |
 | `arcane.search` | Search files and folders | Planned |
 | `arcane.security` | Calculate SHA-256 hashes and verify file integrity | Available |
 
@@ -37,6 +37,70 @@ never modified, and file metadata is kept.
 - A problem on one file (missing file, permission error) is reported in the
   result and does not stop the others.
 - An unknown criterion raises `ValueError` before anything is touched.
+
+### Comparison
+
+The `arcane.comparison` module provides functions to compare two folders
+and detect added, deleted and modified files.
+
+| Function | Description |
+|---|---|
+| `find_added_files()` | Identify files present in the new folder but not in the old folder |
+| `find_deleted_files()` | Identify files present in the old folder but not in the new folder |
+| `find_modified_files()` | Identify files with the same name but different contents using SHA-256 |
+| `compare_folders()` | Combine the three comparison operations |
+
+- Only files directly contained in the folders are compared.
+  Subdirectories are ignored.
+- Individual comparison functions return sorted lists of filenames.
+- `compare_folders()` returns a dictionary containing the selected
+  comparison results.
+- Comparisons can be enabled or disabled using the `added`, `deleted`
+  and `modified` parameters. Disabled comparisons are omitted from the result.
+- All functions support the optional `display` parameter, which is
+  disabled by default.
+- Invalid folder paths raise `FileNotFoundError` or `NotADirectoryError`.
+
+**Example:**
+
+```python
+from arcane.comparison import (
+    find_added_files,
+    find_deleted_files,
+    find_modified_files,
+    compare_folders,
+)
+
+old_folder = "old"
+new_folder = "new"
+
+# Individual comparisons
+added_files = find_added_files(old_folder, new_folder)
+deleted_files = find_deleted_files(old_folder, new_folder)
+modified_files = find_modified_files(old_folder, new_folder)
+
+# Compare all differences
+result = compare_folders(old_folder, new_folder, display=True)
+
+# Compare only added and modified files
+partial_result = compare_folders(old_folder, new_folder, deleted=False)
+```
+
+For example, a complete comparison may return:
+
+```python
+{
+    "added": ["new.txt"],
+    "deleted": ["removed.txt"],
+    "modified": ["document.txt"],
+}
+```
+
+When `display=True`, differences are displayed using the following symbols:
+
+- `+`: added file
+- `-`: deleted file
+- `~`: modified file
 
 ### Security
 
