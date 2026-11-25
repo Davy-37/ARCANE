@@ -3,6 +3,7 @@ import arcane.analysis
 PUBLIC_NAMES = {
     "ClassifyResult",
     "CopiedEntry",
+    "duplicates",
     "FailedEntry",
     "File_classify",
     "by_date",
