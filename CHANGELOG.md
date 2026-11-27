@@ -20,6 +20,9 @@ project adheres to [Semantic Versioning](https://semver.org/).
   copy of each file.
 - `sha256()` to compute the SHA-256 hash of a file, and
   `verify_file_integrity()` to check whether a file was modified.
+- `contains_word()`, `find_lines()`, `count_occurrences()`, `get_context()`
+  and `search_in_folder()` to search text files by keyword, with case and
+  whole-word options, contextual lines, and optional extension filtering.
 - Pre-commit with Black, Ruff and file checks.
 - Issue and pull request templates, and a contributing guide.
 - A README describing the features, the installation and a usage example.
