@@ -118,6 +118,45 @@ or by literal words and phrases in their contents.
 | `get_context()` | Return matching lines and their surrounding context |
 | `search_in_folder()` | Find files containing a keyword, with optional extension filtering |
 
+#### Search by extension
+
+`by_extension()` finds files matching one or more extensions in a directory.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `root_dir` | `str` or `Path` | Starting directory path |
+| `extensions` | `str` or `list[str]` | Target file extension(s) |
+| `recursive` | `bool` | Include subdirectories (default: `True`) |
+
+The function returns a list of `Path` objects representing matching files.
+
+- Extensions can be provided with or without a leading dot.
+- Multiple extensions can be searched at the same time.
+- Extension matching is case-sensitive.
+- Directory searches are recursive by default.
+- Only files are returned, not directories.
+- An empty list is returned if the root path is not a directory
+  or no files match.
+
+**Example:**
+
+```python
+from arcane.search import by_extension
+
+# Search for a single extension
+text_files = by_extension("documents", ".txt")
+
+# Search for multiple extensions
+files = by_extension("documents", ["txt", ".pdf", "csv"])
+
+# Search without including subdirectories
+local_files = by_extension("documents", "txt", recursive=False)
+
+print(files)
+```
+
+#### Search by word
+
 Text searches are case-insensitive by default and support `whole_word=True`
 for word-boundary matching. Files are read line by line as UTF-8, ignoring
 invalid bytes. This is a plain-text search, not a PDF or Office document parser.

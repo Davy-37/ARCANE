@@ -20,6 +20,11 @@ project adheres to [Semantic Versioning](https://semver.org/).
   copy of each file.
 - `sha256()` to compute the SHA-256 hash of a file, and
   `verify_file_integrity()` to check whether a file was modified.
+<<<<<<< Updated upstream
+=======
+- `arcane.search.by_extension()` to find files matching one or more extensions
+  in a directory, with optional recursive search.
+>>>>>>> Stashed changes
 - `contains_word()`, `find_lines()`, `count_occurrences()`, `get_context()`
   and `search_in_folder()` to search text files by keyword, with case and
   whole-word options, contextual lines, and optional extension filtering.
