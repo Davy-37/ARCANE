@@ -7,7 +7,7 @@
 A Python library to analyze, compare, search, and secure files and folders.
 It only relies on the standard library.
 
-> **Status:** early development. Analysis, comparison and security features are available;
+> **Status:** early development. Analysis, comparison, search and security features are available;
 > the API may still change.
 
 ## Features
@@ -18,7 +18,7 @@ The library is organized in submodules.
 |---|---|---|
 | `arcane.analysis` | Classify files into folders by extension, size or date | Available |
 | `arcane.comparison` | Detect added, deleted and modified files between folders | Available |
-| `arcane.search` | Search files and folders | Planned |
+| `arcane.search` | Search files by extension or text content | Available |
 | `arcane.security` | Calculate SHA-256 hashes and verify file integrity | Available |
 
 ### Analysis
@@ -103,6 +103,37 @@ When `display=True`, differences are displayed using the following symbols:
 - `+`: added file
 - `-`: deleted file
 - `~`: modified file
+
+### Search
+
+The `arcane.search` module provides functions to search files by extension
+or by literal words and phrases in their contents.
+
+| Function | Description |
+|---|---|
+| `by_extension()` | Find files matching one or more extensions |
+| `contains_word()` | Check whether a text file contains a keyword |
+| `find_lines()` | Return matching line numbers and contents |
+| `count_occurrences()` | Count non-overlapping occurrences |
+| `get_context()` | Return matching lines and their surrounding context |
+| `search_in_folder()` | Find files containing a keyword, with optional extension filtering |
+
+Text searches are case-insensitive by default and support `whole_word=True`
+for word-boundary matching. Files are read line by line as UTF-8, ignoring
+invalid bytes. This is a plain-text search, not a PDF or Office document parser.
+Empty keywords raise `ValueError`; invalid directories return an empty list.
+File access errors are propagated. Directory searches are recursive by default.
+
+**Example:**
+
+```python
+from arcane.search import count_occurrences, find_lines, search_in_folder
+
+files = search_in_folder("documents", "python", extensions=["txt", "md"])
+for file in files:
+    print(file, count_occurrences(file, "python"))
+    print(find_lines(file, "python"))
+```
 
 ### Security
 
